@@ -9,6 +9,7 @@
     const handleResponse = async(response, parseResponse) => {
       //grab content section to write to
       const content = document.querySelector('#content');
+      const type = document.querySelector('#type');
 
       //write based on status code of response
       switch(response.status){
@@ -35,18 +36,27 @@
           break;
       }
 
-      //when a GET request is made
-      if (parseResponse){
-        //Parse response to json or xml
-        let obj = await response.json();
+      // //if there was no response to parse, just report metadata was recieved
+      // content.innerHTML += '<p>Meta Data Received</p>'
 
-        //stringify JSON to display data
-        let jsonString = JSON.stringify(obj);
-        content.innerHTML += `<p>${jsonString}</p>`;
-      }
-      else {
-        //if there was no response to parse, just report metadata was recieved
-        content.innerHTML += '<p>Meta Data Received</p>';
+      //when a GET request is made
+      switch(type){
+        case 'text/xml':
+          let obj = await response.xml();
+          let xmlString = toString(obj);
+          content.innerHTML += `<p>${xmlString}</p>`;
+          break;
+
+        //default is json
+        case 'application/json':
+        default:
+          //Parse response to json 
+          obj = await response.json();
+
+          //stringify JSON to display data
+          let jsonString = JSON.stringify(obj);
+          content.innerHTML += `<p>${jsonString}</p>`;
+          break;
       }
     };
 

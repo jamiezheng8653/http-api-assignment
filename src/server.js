@@ -148,7 +148,10 @@ const onRequest = (request, response) => {
 
     //route based on the path that the user went to
     if (urlStruct[parsedUrl.pathname]){
-        return urlStruct[parsedUrl.pathname](request, response);
+        console.log(parsedUrl.pathname);
+        //return urlStruct[parsedUrl.pathname](request, response); results in a ERR_HTTP_HEADERS_SENT error.
+        //however below allows the page to load before crashing the server. is reading pathname as undefined
+        return urlStruct.urlStruct[parsedUrl.pathname](request, response);
     };
 
     return urlStruct.notFound(request, response);

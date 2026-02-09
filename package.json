@@ -1,0 +1,25 @@
+{
+  "name": "http-api-assignment",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/jamiezheng8653/http-api-assignment#readme",
+  "bugs": {
+    "url": "https://github.com/jamiezheng8653/http-api-assignment/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamiezheng8653/http-api-assignment.git"
+  },
+  "license": "UNLICENSED",
+  "author": "Jamie Zheng",
+  "type": "commonjs",
+  "main": "eslint.config.js",
+  "scripts": {
+    "test": "echo \"Tests complete\"",
+    "start": "node ./src/server.js",
+    "pretest": "eslint ./src --fix"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.2"
+  }
+}

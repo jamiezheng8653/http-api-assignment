@@ -5,6 +5,105 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script>
+    //handle response in the response object
+    const handleResponse = async(response, parseResponse) => {
+      //grab content section to write to
+      const content = document.querySelector('#content');
+
+      //write based on status code of response
+      switch(response.status){
+        case 200:
+          content.innerHTML = `<b>Success</b>`;
+          break;
+        case 400:
+          content.innerHTML = `<b>Bad Request</b>`;
+          break;
+        case 401:
+          content.innerHTML = `<b>Unauthorized</b>`;
+          break;
+        case 403: 
+          content.innerHTML = `<b>Forbidden</b>`;
+          break;
+        case 404:
+          content.innerHTML = `<b>Page not found</b>`;
+          break;
+        case 500:
+          content.innerHTML = `<b>Internal Error</b>`;
+          break;
+        case 501:
+          content.innerHTML = `<b>Not Implemented</b>`;
+          break;
+      }
+
+      //when a GET request is made
+      if (parseResponse){
+        //Parse response to json or xml
+        let obj = await response.json();
+
+        //stringify JSON to display data
+        let jsonString = JSON.stringify(obj);
+        content.innerHTML += `<p>${jsonString}</p>`;
+      }
+      else {
+        //if there was no response to parse, just report metadata was recieved
+        content.innerHTML += '<p>Meta Data Received</p>';
+      }
+    };
+
+    //send request
+    const sendPost = async (top) => {
+      const url = top.getAttribute('action');
+      const method = top.getAttribute('method');
+      //page/url type and object type (xml or json) 
+      const pageValue = top.querySelector('#page').value;
+      const typeValue = top.querySelector('#type').value;
+
+      //build a data string in the FORM-URLENCODED format
+      let formData = `page=${page}&type=${type}`;
+
+      //if type is JSON, send instead
+      if (type == 'application/json'){
+        formData = JSON.stringify({page, type});
+      }
+
+      //when FETCH response arrives
+      let response = await fetch(url,   //go to the url 
+      {
+        method: method,                 //use the correct method
+        headers: {                      //attach the headers
+          'Content-Type': type,
+          'Content-Length': formData.length,
+          'Accept': 'application/json' || 'text/xml'
+        },
+        body: formData,
+      });
+
+      //handle response once we have it
+      handleResponse(response);
+    };
+
+    //set page properly
+    const init = () => {
+      //send button
+      const send = document.querySelector('#send');
+      const top = document.querySelector('#top');
+      //what value of the page type drop down
+      const page = document.querySelector('#page');
+      //is JSON or XML selected
+      const type = document.querySelector('#type');
+
+      //handle requests
+      const loadPage = (e) => {
+        e.preventDefault();
+        sendPost(top);
+        return false;
+      }
+
+      //add event listener
+      send.addEventListener('click', loadPage);
+    };
+
+    window.onload = init;
 
   </script>
 </head>
